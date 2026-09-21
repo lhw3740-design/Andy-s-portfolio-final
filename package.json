@@ -1,0 +1,11 @@
+{
+  "name": "andy-s-portfolio-final",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Andy 소개 페이지 + 패스키(WebAuthn)로 잠긴 비공개 영역",
+  "dependencies": {
+    "@simplewebauthn/server": "^11.0.0",
+    "@supabase/supabase-js": "^2.45.4",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

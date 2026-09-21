@@ -14,6 +14,7 @@
     <a href="#about">소개</a>
     <a href="#strengths">강점과 취향</a>
     <a href="#proof">영어 증빙</a>
+    <a href="#private">비공개</a>
   </nav>
 </header>
 
@@ -91,6 +92,22 @@
   <div class="lp-wrap">
     <img src="lp-shelf.jpg" alt="턴테이블과 LP가 놓인 개인 음악 공간" loading="lazy">
     <p>내가 모은 LP와 턴테이블입니다. 음악을 듣는 것에서 끝내지 않고, 좋아하는 것을 직접 모으고 오래 즐기는 취향을 보여주는 공간입니다.</p>
+  </div>
+</section>
+<section class="private" id="private" aria-labelledby="private-title">
+  <div class="heading">
+    <p class="eyebrow">PRIVATE / PASSKEY ONLY</p>
+    <h2 id="private-title">나만 보는 자리</h2>
+    <p>여기부터는 비공개입니다. 등록해 둔 패스키로 로그인해야 열립니다. 실제 개인정보는 없고, 확인용으로 만들어 넣은 내용입니다.</p>
+  </div>
+
+  <div id="privateLocked" class="private-box locked">
+    <p>🔒 지금은 잠겨 있습니다.</p>
+    <button id="passkeyLoginBtn" type="button" disabled title="카드2·3에서 패스키 등록/로그인이 연결되면 활성화됩니다">패스키로 로그인 (준비 중)</button>
+  </div>
+
+  <div id="privateUnlocked" class="private-box unlocked" hidden>
+    <!-- 로그인 성공 시 /api/private 응답으로만 채워집니다. 서버가 보내주기 전에는 이 안에 아무 내용도 없습니다. -->
   </div>
 </section>
 </main>
