@@ -103,7 +103,20 @@
 
   <div id="privateLocked" class="private-box locked">
     <p>🔒 지금은 잠겨 있습니다.</p>
-    <button id="passkeyLoginBtn" type="button" disabled title="카드2·3에서 패스키 등록/로그인이 연결되면 활성화됩니다">패스키로 로그인 (준비 중)</button>
+    <button id="passkeyLoginBtn" type="button">패스키로 로그인</button>
+
+    <details class="register-details">
+      <summary>처음이라 계정이 없어요</summary>
+      <label>아이디 (영문/숫자/-/_ 2~20자)
+        <input id="handleInput" type="text" autocomplete="username webauthn" maxlength="20" placeholder="andy">
+      </label>
+      <label>이 패스키 이름 (예: 내 맥북, 아이폰)
+        <input id="deviceNameInput" type="text" maxlength="60" placeholder="내 노트북">
+      </label>
+      <button id="registerBtn" type="button">패스키 등록하고 계정 만들기</button>
+    </details>
+
+    <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
   </div>
 
   <div id="privateUnlocked" class="private-box unlocked" hidden>
@@ -117,6 +130,7 @@
   <b>2026</b>
 </footer>
 
+<script src="https://unpkg.com/@simplewebauthn/browser@11/dist/bundle/index.umd.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
