@@ -111,7 +111,10 @@ document.addEventListener('DOMContentLoaded', () => {
           attResp = await SimpleWebAuthnBrowser.startRegistration(optRes.data.options);
         } catch (err) {
           // 사용자가 기기 다이얼로그에서 취소했거나 인증기가 없는 경우
-          setAuthMessage('패스키 등록이 취소되었습니다. 서버에는 아무것도 저장되지 않았어요.');
+          console.error('startRegistration failed', err);
+          setAuthMessage(
+            `패스키 등록이 취소/실패했습니다. 서버에는 아무것도 저장되지 않았어요. (${err.name}: ${err.message})`
+          );
           return;
         }
 
@@ -154,7 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
           authResp = await SimpleWebAuthnBrowser.startAuthentication(optRes.data.options);
         } catch (err) {
-          setAuthMessage('로그인이 취소되었습니다.');
+          console.error('startAuthentication failed', err);
+          setAuthMessage(`로그인이 취소/실패했습니다. (${err.name}: ${err.message})`);
           return;
         }
 
