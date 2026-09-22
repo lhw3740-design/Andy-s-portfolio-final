@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let attResp;
         try {
-          attResp = await SimpleWebAuthnBrowser.startRegistration(optRes.data.options);
+          attResp = await SimpleWebAuthnBrowser.startRegistration({ optionsJSON: optRes.data.options });
         } catch (err) {
           // 사용자가 기기 다이얼로그에서 취소했거나 인증기가 없는 경우
           console.error('startRegistration failed', err);
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let authResp;
         try {
-          authResp = await SimpleWebAuthnBrowser.startAuthentication(optRes.data.options);
+          authResp = await SimpleWebAuthnBrowser.startAuthentication({ optionsJSON: optRes.data.options });
         } catch (err) {
           console.error('startAuthentication failed', err);
           setAuthMessage(`로그인이 취소/실패했습니다. (${err.name}: ${err.message})`);
