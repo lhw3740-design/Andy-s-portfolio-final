@@ -46,6 +46,7 @@ module.exports = async function handler(req, res) {
         expectedChallenge: challengeRow.challenge,
         expectedOrigin: origins,
         expectedRPID: rpID,
+        requireUserVerification: false, // 등록 옵션을 'preferred'로 만들었으므로 검증도 이에 맞춤
       });
     } catch (err) {
       console.error('verifyRegistrationResponse failed', err);

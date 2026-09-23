@@ -76,6 +76,7 @@ module.exports = async function handler(req, res) {
         expectedChallenge: challengeRow.challenge,
         expectedOrigin: origins,
         expectedRPID: rpID,
+        requireUserVerification: false, // 등록 옵션을 'preferred'로 만들었으므로 검증도 이에 맞춤
         credential: {
           id: credRow.id,
           publicKey: new Uint8Array(fromBase64(credRow.public_key)),
