@@ -45,7 +45,13 @@ module.exports = async function handler(req, res) {
       .eq('webauthn_user_id', toBase64(webauthnUserId))
       .maybeSingle();
     if (userErr) throw userErr;
-    if (!userRow) return res.status(401).json({ error: 'unknown_credential' });
+    if (!userRow) {
+      console.error('login/verify: no user for webauthn_user_id', {
+        computed: toBase64(webauthnUserId),
+        userHandleB64,
+      });
+      return res.status(401).json({ error: 'unknown_credential', reason: 'user_not_found' });
+    }
 
     const { data: credRow, error: credErr } = await supabase
       .from('credentials')
@@ -54,7 +60,14 @@ module.exports = async function handler(req, res) {
       .eq('user_id', userRow.id)
       .maybeSingle();
     if (credErr) throw credErr;
-    if (!credRow) return res.status(401).json({ error: 'unknown_credential' });
+    if (!credRow) {
+      console.error('login/verify: no credential row', {
+        responseId: response.id,
+        userId: userRow.id,
+        handle: userRow.handle,
+      });
+      return res.status(401).json({ error: 'unknown_credential', reason: 'credential_not_found' });
+    }
 
     let verification;
     try {
