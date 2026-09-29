@@ -35,3 +35,4 @@ a:focus-visible,button:focus-visible,.international:focus-visible{outline:3px so
 .link-code-display{font-size:1.3rem;font-weight:700;letter-spacing:.08em;margin-top:12px;padding:10px 14px;border:1px dashed var(--line);display:inline-block}
 @media(max-width:650px){.private{padding-left:20px;padding-right:20px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card:hover{transform:none;transition:none}.proof{transform:none}}
+.memo-form{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}.memo-form h3{margin:0 0 6px;font-size:1rem}.memo-form input,.memo-form textarea{display:block;width:100%;max-width:420px;margin-top:8px;padding:10px 12px;border:1px solid var(--line);background:var(--bg);font:inherit;font-size:.9rem}.memo-form button{margin-top:10px}

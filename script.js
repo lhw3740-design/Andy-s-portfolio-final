@@ -39,6 +39,8 @@ async function loadPrivateArea() {
     });
     unlockedBox.appendChild(list);
 
+    renderMemoForm(unlockedBox);
+
     await renderPasskeyManager(unlockedBox);
 
     const logoutBtn = document.createElement('button');
@@ -60,6 +62,58 @@ async function loadPrivateArea() {
 }
 
 document.addEventListener('DOMContentLoaded', loadPrivateArea);
+
+// --- 카드5: 내 비공개 메모 추가 (계정마다 서로 다른 내용을 만들어 넣기 위한 폼) ---
+function renderMemoForm(container) {
+  const wrap = document.createElement('section');
+  wrap.className = 'memo-form';
+
+  const h = document.createElement('h3');
+  h.textContent = '메모 추가';
+  wrap.appendChild(h);
+
+  const hint = document.createElement('p');
+  hint.className = 'auth-message';
+  hint.textContent = '실제 연락처나 신분증 번호 같은 개인정보는 적지 말고, 만들어 낸 내용만 적어주세요.';
+  wrap.appendChild(hint);
+
+  const titleInput = document.createElement('input');
+  titleInput.type = 'text';
+  titleInput.maxLength = 60;
+  titleInput.placeholder = '제목';
+  wrap.appendChild(titleInput);
+
+  const bodyInput = document.createElement('textarea');
+  bodyInput.maxLength = 500;
+  bodyInput.rows = 3;
+  bodyInput.placeholder = '내용';
+  wrap.appendChild(bodyInput);
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.textContent = '메모 저장';
+  wrap.appendChild(btn);
+
+  const msg = document.createElement('p');
+  msg.className = 'auth-message';
+  wrap.appendChild(msg);
+
+  btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    try {
+      const r = await postJSON('/api/private', { title: titleInput.value, body: bodyInput.value });
+      if (!r.ok) {
+        msg.textContent = (r.data && r.data.message) || '저장에 실패했습니다.';
+        return;
+      }
+      await loadPrivateArea();
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  container.appendChild(wrap);
+}
 
 // --- 카드4: 등록된 패스키 목록 보기 / 추가 등록 / 삭제 ---
 async function renderPasskeyManager(container) {
