@@ -7,7 +7,7 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'method_not_allowed' });
   }
 
-  const session = getSession(req);
+  const session = await getSession(req);
   if (!session) {
     // 로그인(패스키 인증)하지 않은 상태 -> 비공개 내용은 절대 내려주지 않음
     return res.status(401).json({ error: 'unauthorized' });

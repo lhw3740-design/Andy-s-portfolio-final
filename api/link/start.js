@@ -16,7 +16,7 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'method_not_allowed' });
   }
 
-  const session = getSession(req);
+  const session = await getSession(req);
   if (!session) return res.status(401).json({ error: 'unauthorized' });
 
   const supabase = getSupabase();

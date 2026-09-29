@@ -1,7 +1,7 @@
 const { verifyRegistrationResponse } = require('@simplewebauthn/server');
 const { getSupabase } = require('../_lib/supabase');
 const { getWebAuthnConfig } = require('../_lib/webauthn-config');
-const { buildSessionCookie } = require('../_lib/session');
+const { createSessionCookie } = require('../_lib/session');
 const { toBase64 } = require('../_lib/buf');
 
 module.exports = async function handler(req, res) {
@@ -111,7 +111,7 @@ module.exports = async function handler(req, res) {
       ]);
     }
 
-    res.setHeader('Set-Cookie', buildSessionCookie(userId, userRow.handle));
+    res.setHeader('Set-Cookie', await createSessionCookie(userId, userRow.handle));
     return res.status(200).json({ ok: true, handle: userRow.handle });
   } catch (err) {
     console.error('register/verify error', err);

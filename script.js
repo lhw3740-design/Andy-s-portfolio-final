@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
           // 사용자가 기기 다이얼로그에서 취소했거나 인증기가 없는 경우
           console.error('startRegistration failed', err);
           setAuthMessage(
-            `패스키 등록이 취소/실패했습니다. 서버에는 아무것도 저장되지 않았어요. (${err.name}: ${err.message})`
+            `패스키 등록이 취소/실패했습니다. 공개키는 저장되지 않았어요. (${err.name}: ${err.message})`
           );
           return;
         }

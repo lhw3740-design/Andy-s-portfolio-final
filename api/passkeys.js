@@ -2,7 +2,7 @@ const { getSupabase } = require('./_lib/supabase');
 const { getSession } = require('./_lib/session');
 
 module.exports = async function handler(req, res) {
-  const session = getSession(req);
+  const session = await getSession(req);
   if (!session) return res.status(401).json({ error: 'unauthorized' });
 
   const supabase = getSupabase();

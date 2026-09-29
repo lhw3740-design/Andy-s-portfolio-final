@@ -16,7 +16,7 @@ module.exports = async function handler(req, res) {
   try {
     const { rpID, rpName } = getWebAuthnConfig();
     const supabase = getSupabase();
-    const session = getSession(req);
+    const session = await getSession(req);
     const body = req.body || {};
 
     let userRow;

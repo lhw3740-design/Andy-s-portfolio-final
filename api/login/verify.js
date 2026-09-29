@@ -1,7 +1,7 @@
 const { verifyAuthenticationResponse } = require('@simplewebauthn/server');
 const { getSupabase } = require('../_lib/supabase');
 const { getWebAuthnConfig } = require('../_lib/webauthn-config');
-const { buildSessionCookie } = require('../_lib/session');
+const { createSessionCookie } = require('../_lib/session');
 const { toBase64, fromBase64 } = require('../_lib/buf');
 
 module.exports = async function handler(req, res) {
@@ -100,7 +100,7 @@ module.exports = async function handler(req, res) {
       .update({ counter: verification.authenticationInfo.newCounter })
       .eq('id', credRow.id);
 
-    res.setHeader('Set-Cookie', buildSessionCookie(userRow.id, userRow.handle));
+    res.setHeader('Set-Cookie', await createSessionCookie(userRow.id, userRow.handle));
     return res.status(200).json({ ok: true, handle: userRow.handle });
   } catch (err) {
     console.error('login/verify error', err);
