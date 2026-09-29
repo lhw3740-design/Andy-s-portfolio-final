@@ -76,8 +76,18 @@ async function renderPasskeyManager(container) {
 
   const addBtn = document.createElement('button');
   addBtn.type = 'button';
-  addBtn.textContent = '패스키 하나 더 등록 (다른 기기 대비)';
+  addBtn.textContent = '패스키 하나 더 등록 (이 브라우저에서)';
   section.appendChild(addBtn);
+
+  const linkBtn = document.createElement('button');
+  linkBtn.type = 'button';
+  linkBtn.textContent = '다른 기기에서 추가하기 (코드 생성)';
+  section.appendChild(linkBtn);
+
+  const codeDisplay = document.createElement('p');
+  codeDisplay.className = 'link-code-display';
+  codeDisplay.hidden = true;
+  section.appendChild(codeDisplay);
 
   const msg = document.createElement('p');
   msg.className = 'auth-message';
@@ -168,6 +178,18 @@ async function renderPasskeyManager(container) {
     } finally {
       addBtn.disabled = false;
     }
+  });
+
+  linkBtn.addEventListener('click', async () => {
+    linkBtn.disabled = true;
+    const res = await postJSON('/api/link/start', {});
+    linkBtn.disabled = false;
+    if (!res.ok) {
+      msg.textContent = '코드 생성에 실패했습니다.';
+      return;
+    }
+    codeDisplay.hidden = false;
+    codeDisplay.textContent = `코드: ${res.data.code}  (5분 안에 다른 기기에서 "다른 기기에서 만든 코드가 있어요"에 입력하세요)`;
   });
 
   await refreshList();
@@ -290,6 +312,61 @@ document.addEventListener('DOMContentLoaded', () => {
         await loadPrivateArea();
       } finally {
         loginBtn.disabled = false;
+      }
+    });
+  }
+
+  const linkRegisterBtn = document.getElementById('linkRegisterBtn');
+  const linkCodeInput = document.getElementById('linkCodeInput');
+  const linkDeviceNameInput = document.getElementById('linkDeviceNameInput');
+
+  if (linkRegisterBtn) {
+    linkRegisterBtn.addEventListener('click', async () => {
+      if (typeof SimpleWebAuthnBrowser === 'undefined') {
+        setAuthMessage('패스키 라이브러리를 불러오지 못했습니다. 새로고침 후 다시 시도해주세요.');
+        return;
+      }
+      const linkCode = (linkCodeInput.value || '').trim().toUpperCase();
+      const deviceName = (linkDeviceNameInput.value || '').trim();
+      if (!linkCode) {
+        setAuthMessage('코드를 입력해주세요.');
+        return;
+      }
+
+      linkRegisterBtn.disabled = true;
+      setAuthMessage('등록을 준비하고 있어요…');
+
+      try {
+        const optRes = await postJSON('/api/register/options', { linkCode });
+        if (!optRes.ok) {
+          setAuthMessage((optRes.data && optRes.data.message) || '코드 확인에 실패했습니다.');
+          return;
+        }
+
+        let attResp;
+        try {
+          attResp = await SimpleWebAuthnBrowser.startRegistration({ optionsJSON: optRes.data.options });
+        } catch (err) {
+          console.error('startRegistration (link) failed', err);
+          setAuthMessage(`패스키 등록이 취소/실패했습니다. (${err.name}: ${err.message})`);
+          return;
+        }
+
+        const verifyRes = await postJSON('/api/register/verify', {
+          userId: optRes.data.userId,
+          deviceName,
+          response: attResp,
+        });
+
+        if (!verifyRes.ok) {
+          setAuthMessage((verifyRes.data && verifyRes.data.message) || '등록 검증에 실패했습니다.');
+          return;
+        }
+
+        setAuthMessage(`이 기기에 "${optRes.data.handle}" 계정 패스키가 추가되고 자동 로그인됐습니다.`);
+        await loadPrivateArea();
+      } finally {
+        linkRegisterBtn.disabled = false;
       }
     });
   }

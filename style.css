@@ -32,5 +32,6 @@ a:focus-visible,button:focus-visible,.international:focus-visible{outline:3px so
 .auth-message{min-height:1.2em;font-size:.82rem;color:var(--muted);margin:14px 0 0}
 .passkey-manager{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}.passkey-manager h3{margin:0 0 10px;font-size:1rem}
 .passkey-list{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:8px}.passkey-list li{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--line);padding:10px 14px;font-size:.85rem}.passkey-list button{flex-shrink:0}
+.link-code-display{font-size:1.3rem;font-weight:700;letter-spacing:.08em;margin-top:12px;padding:10px 14px;border:1px dashed var(--line);display:inline-block}
 @media(max-width:650px){.private{padding-left:20px;padding-right:20px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card:hover{transform:none;transition:none}.proof{transform:none}}

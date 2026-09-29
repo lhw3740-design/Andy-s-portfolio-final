@@ -22,9 +22,29 @@ module.exports = async function handler(req, res) {
     let userRow;
     let existingCredentials = [];
 
-    if (session) {
-      // 이미 로그인된 상태 -> 같은 계정에 패스키를 하나 더 등록 (카드4에서 사용)
-      const { data, error } = await supabase.from('users').select('*').eq('id', session.sub).maybeSingle();
+    if (session || body.linkCode) {
+      // 이미 로그인된 상태, 또는 다른 기기에서 받은 1회용 코드 -> 같은 계정에 패스키를 하나 더 등록 (카드4)
+      let userId = session ? session.sub : null;
+
+      if (!userId) {
+        const code = String(body.linkCode).trim().toUpperCase();
+        const { data: linkRow, error: linkErr } = await supabase
+          .from('device_link_codes')
+          .select('*')
+          .eq('code', code)
+          .eq('used', false)
+          .gt('expires_at', new Date().toISOString())
+          .maybeSingle();
+        if (linkErr) throw linkErr;
+        if (!linkRow) {
+          return res.status(401).json({ error: 'invalid_code', message: '코드가 틀렸거나 만료되었습니다.' });
+        }
+        userId = linkRow.user_id;
+        // 코드는 이 등록 시도 하나에만 쓰이도록 바로 사용 처리 (재사용 방지)
+        await supabase.from('device_link_codes').update({ used: true }).eq('code', code);
+      }
+
+      const { data, error } = await supabase.from('users').select('*').eq('id', userId).maybeSingle();
       if (error) throw error;
       if (!data) return res.status(401).json({ error: 'unauthorized' });
       userRow = data;
